@@ -12,27 +12,27 @@ alerting:
             - 'alertmanager:9093'
 
 scrape_configs:
-  - job_name: 'litellm'
+  # Example: Prometheus self-monitoring
+  - job_name: 'prometheus'
     static_configs:
-      - targets: ['litellm-enterprise-proxy:4000']
-    metrics_path: '/metrics'
+      - targets: ['localhost:9090']
 
-  - job_name: 'node_exporter_truenas'
-    static_configs:
-      - targets: ['10.1.0.99:9100']
-
-  - job_name: 'node_exporter_client'
-    static_configs:
-      - targets: ['10.1.0.91:9100']
-
-  - job_name: 'cadvisor_truenas'
-    static_configs:
-      - targets: ['10.1.0.99:8085']
-
-  - job_name: 'cadvisor_client'
-    static_configs:
-      - targets: ['10.1.0.91:8085']
-
-  - job_name: 'nvidia_gpu_truenas'
-    static_configs:
-      - targets: ['10.1.0.99:9400']
+  # Add your scrape targets below
+  # Example configurations (uncomment and modify as needed):
+  
+  # - job_name: 'node_exporter'
+  #   static_configs:
+  #     - targets: ['your-host:9100']
+  
+  # - job_name: 'cadvisor'
+  #   static_configs:
+  #     - targets: ['your-host:8080']
+  
+  # - job_name: 'litellm'
+  #   static_configs:
+  #     - targets: ['your-litellm-host:4000']
+  #   metrics_path: '/metrics'
+  
+  # - job_name: 'nvidia_gpu'
+  #   static_configs:
+  #     - targets: ['your-host:9400']

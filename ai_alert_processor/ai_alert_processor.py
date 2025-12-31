@@ -106,10 +106,6 @@ Analyze the following alerts occurring in our infrastructure:
 
 {alert_summary}
 
-Context:
-- Environment: Enterprise Production
-- Services: Frigate (NVR), LiteLLM (AI Gateway), TrueNAS (Storage)
-
 Provide:
 1. Severity Assessment (Low/Medium/High/Critical)
 2. Probable Root Cause

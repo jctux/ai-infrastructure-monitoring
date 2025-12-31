@@ -11,4 +11,4 @@ route:
 receivers:
   - name: 'web.hook'
     webhook_configs:
-      - url: 'http://ai-alert-processor:5000/webhook'
+      - url: 'http://ai-alert-processor:5050/webhook'

@@ -84,7 +84,7 @@ See [VAULT_SETUP.md](docs/VAULT_SETUP.md) for detailed instructions.
 Required secrets in Vault at path `ai-infrastructure-monitoring/`:
 
 ```
-litellm/url          -> http://10.1.0.99:4000
+litellm/url          -> http://your-litellm-host:4000
 litellm/master_key   -> your-litellm-master-key
 litellm/model        -> gpt-4o
 grafana/admin_user   -> admin
