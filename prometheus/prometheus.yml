@@ -1,0 +1,38 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - "/etc/prometheus/alert_rules/alerts.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - 'alertmanager:9093'
+
+scrape_configs:
+  - job_name: 'litellm'
+    static_configs:
+      - targets: ['litellm-enterprise-proxy:4000']
+    metrics_path: '/metrics'
+
+  - job_name: 'node_exporter_truenas'
+    static_configs:
+      - targets: ['10.1.0.99:9100']
+
+  - job_name: 'node_exporter_client'
+    static_configs:
+      - targets: ['10.1.0.91:9100']
+
+  - job_name: 'cadvisor_truenas'
+    static_configs:
+      - targets: ['10.1.0.99:8085']
+
+  - job_name: 'cadvisor_client'
+    static_configs:
+      - targets: ['10.1.0.91:8085']
+
+  - job_name: 'nvidia_gpu_truenas'
+    static_configs:
+      - targets: ['10.1.0.99:9400']

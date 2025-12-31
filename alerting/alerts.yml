@@ -1,0 +1,49 @@
+groups:
+  - name: Infrastructure
+    rules:
+      - alert: HostDown
+        expr: up == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Host {{ $labels.instance }} is down"
+          description: "Prometheus target {{ $labels.instance }} has been down for more than 2 minutes."
+
+      - alert: HighCPUUsage
+        expr: 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is above 90% for 5 minutes."
+
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Memory usage on {{ $labels.instance }}"
+          description: "Memory usage is above 90% for 5 minutes."
+
+      - alert: DiskSpaceRunningLow
+        expr: node_filesystem_free_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} * 100 < 10
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Disk space running low on {{ $labels.instance }}"
+          description: "Root filesystem has less than 10% free space."
+
+  - name: LiteLLM
+    rules:
+      - alert: HighErrorRate
+        expr: rate(litellm_requests_total{status="error"}[5m]) / rate(litellm_requests_total[5m]) * 100 > 5
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High LiteLLM Error Rate"
+          description: "Error rate is above 5% for 2 minutes."
