@@ -14,6 +14,7 @@ This standalone monitoring stack provides:
 ## Features
 
 - **AI-Powered Alerts**: Automatic root cause analysis and remediation suggestions
+- **SMS Notifications**: Real-time Twilio SMS alerts for AI processing (entry and exit)
 - **Secure by Default**: All secrets stored in Vault, no hardcoded credentials
 - **Portable**: Deploy anywhere with Docker Compose
 - **Production Ready**: Includes data persistence, health checks, and proper restart policies
@@ -34,11 +35,14 @@ This standalone monitoring stack provides:
 └────────┬────────┘
          │
          ▼
-┌─────────────────┐      ┌──────────────┐
-│ AI Alert        │─────>│  LiteLLM     │
-│ Processor       │      │  Proxy       │
-│    :5050        │<─────│  :4000       │
-└─────────────────┘      └──────────────┘
+┌─────────────────┐      ┌──────────────┐      ┌──────────────┐
+│ AI Alert        │─────>│  LiteLLM     │      │   Twilio     │
+│ Processor       │      │  Proxy       │      │   SMS API    │
+│    :5050        │<─────│  :4000       │      │              │
+└────────┬────────┘      └──────────────┘      └──────────────┘
+         │                                              ▲
+         │  🔔 SMS Notification (Entry & Exit)         │
+         └──────────────────────────────────────────────┘
          │
          ▼
 ┌─────────────────┐
@@ -48,7 +52,7 @@ This standalone monitoring stack provides:
          │
          ▼
 ┌─────────────────┐
-│  HashiCorp      │──> Manages secrets
+│  HashiCorp      │──> Manages secrets (LiteLLM + Twilio)
 │    Vault        │
 │    :8200        │
 └─────────────────┘
@@ -89,6 +93,10 @@ litellm/master_key   -> your-litellm-master-key
 litellm/model        -> gpt-4o
 grafana/admin_user   -> admin
 grafana/admin_pass   -> secure-password
+twilio/account_sid   -> your-twilio-account-sid
+twilio/auth_token    -> your-twilio-auth-token
+twilio/phone_from    -> +1234567890 (your Twilio number)
+twilio/phone_to      -> +1234567890 (your phone for alerts)
 ```
 
 ### 4. Configure Prometheus Targets
@@ -163,6 +171,19 @@ The AI Alert Processor analyzes incoming alerts and provides:
 1. **Severity Assessment** - Low/Medium/High/Critical classification
 2. **Root Cause Analysis** - Probable causes based on alert context
 3. **Remediation Steps** - Actionable recommendations for resolution
+4. **SMS Notifications** - Real-time alerts via Twilio:
+   - 📱 **Entry Notification**: When an alert is received and sent to AI
+   - 🤖 **Exit Notification**: When AI analysis is complete with full results
+
+### SMS Notification Flow
+
+```
+Alert Triggered → SMS: "🚨 ALERTA RECIBIDA - Enviando a AI..."
+      ↓
+AI Analysis Processing...
+      ↓
+AI Complete → SMS: "✅ ANÁLISIS AI COMPLETADO - [Full Analysis]"
+```
 
 ### Example Analysis
 
@@ -240,6 +261,9 @@ docker logs ai-alert-processor
 
 # Verify LiteLLM connectivity
 docker exec ai-alert-processor curl -H "Authorization: Bearer $LITELLM_KEY" $LITELLM_URL/health
+
+# Test Twilio configuration
+docker logs ai-alert-processor | grep -i twilio
 ```
 
 ### Prometheus Not Scraping
@@ -281,6 +305,7 @@ For issues and questions:
 ## Roadmap
 
 - [ ] Multi-tenant support with separate Grafana organizations
+- [x] Twilio SMS notifications for alert processing
 - [ ] Slack/Teams integration for AI analysis results
 - [ ] Custom alert templates with Jinja2
 - [ ] Automated remediation workflows

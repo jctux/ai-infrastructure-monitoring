@@ -20,7 +20,11 @@ ai-infrastructure-monitoring/
 ├── litellm/master_key    # LiteLLM authentication key
 ├── litellm/model         # AI model to use (e.g., gpt-4o)
 ├── grafana/admin_user    # Grafana admin username
-└── grafana/admin_pass    # Grafana admin password
+├── grafana/admin_pass    # Grafana admin password
+├── twilio/account_sid    # Twilio Account SID
+├── twilio/auth_token     # Twilio Auth Token
+├── twilio/phone_from     # Twilio phone number (format: +1234567890)
+└── twilio/phone_to       # Your phone number for alerts (format: +1234567890)
 ```
 
 ## Setup Methods
@@ -50,7 +54,11 @@ vault kv put secret/ai-infrastructure-monitoring \
   litellm/master_key="your-litellm-master-key" \
   litellm/model="gpt-4o" \
   grafana/admin_user="admin" \
-  grafana/admin_pass="your-secure-password"
+  grafana/admin_pass="your-secure-password" \
+  twilio/account_sid="your-twilio-account-sid" \
+  twilio/auth_token="your-twilio-auth-token" \
+  twilio/phone_from="+1234567890" \
+  twilio/phone_to="+1234567890"
 ```
 
 #### 4. Verify Secrets
@@ -85,6 +93,10 @@ Add the following secrets:
 | `litellm/model` | `gpt-4o` |
 | `grafana/admin_user` | `admin` |
 | `grafana/admin_pass` | Your secure Grafana password |
+| `twilio/account_sid` | Your Twilio Account SID |
+| `twilio/auth_token` | Your Twilio Auth Token |
+| `twilio/phone_from` | `+1234567890` |
+| `twilio/phone_to` | `+1234567890` |
 
 #### 5. Save
 
@@ -117,7 +129,11 @@ secrets = {
     "litellm/master_key": "your-litellm-master-key",  # CHANGE THIS
     "litellm/model": "gpt-4o",
     "grafana/admin_user": "admin",
-    "grafana/admin_pass": "your-secure-password"  # CHANGE THIS
+    "grafana/admin_pass": "your-secure-password",  # CHANGE THIS
+    "twilio/account_sid": "your-twilio-account-sid",  # CHANGE THIS
+    "twilio/auth_token": "your-twilio-auth-token",  # CHANGE THIS
+    "twilio/phone_from": "+1234567890",  # CHANGE THIS
+    "twilio/phone_to": "+1234567890"  # CHANGE THIS
 }
 
 # Write secrets to Vault
@@ -229,7 +245,11 @@ vault kv put secret/ai-infrastructure-monitoring \
   litellm/master_key="new-litellm-key" \
   litellm/model="gpt-4o" \
   grafana/admin_user="admin" \
-  grafana/admin_pass="new-secure-password"
+  grafana/admin_pass="new-secure-password" \
+  twilio/account_sid="your-twilio-account-sid" \
+  twilio/auth_token="your-twilio-auth-token" \
+  twilio/phone_from="+1234567890" \
+  twilio/phone_to="+1234567890"
 
 # Restart monitoring stack to pick up new secrets
 docker-compose restart
