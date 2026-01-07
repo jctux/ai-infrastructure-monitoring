@@ -236,8 +236,8 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
+            "drawStyle": "bars",
+            "fillOpacity": 50,
             "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
@@ -250,8 +250,8 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
-            "spanNulls": false,
+            "showPoints": "always",
+            "spanNulls": 60000,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -303,7 +303,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "rate(litellm_deployment_total_requests_total[5m])",
+          "expr": "irate(litellm_deployment_total_requests_total[1m])",
           "legendFormat": "{{requested_model}}",
           "range": true,
           "refId": "A"
